@@ -1,0 +1,54 @@
+CREATE DATABASE WeatherDB;
+USE WeatherDB;
+
+CREATE TABLE Cities (
+    CityID INT PRIMARY KEY AUTO_INCREMENT,
+    CityName VARCHAR(100) NOT NULL,
+    Country VARCHAR(100) NOT NULL,
+    Latitude DECIMAL(8, 6),
+    Longitude DECIMAL(9, 6)
+);
+CREATE TABLE Weather (
+    WeatherID INT PRIMARY KEY AUTO_INCREMENT,
+    CityID INT,
+    Temperature DECIMAL(5, 2),
+    Humidity DECIMAL(5, 2),
+    WeatherCondition VARCHAR(100),
+    Date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CityID) REFERENCES Cities(CityID)
+);
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    UserName VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL
+);
+INSERT INTO Cities (CityName, Country, Latitude, Longitude)
+VALUES ('New York', 'USA', 40.7128, -74.0060),
+       ('London', 'UK', 51.5074, -0.1278),
+       ('Tokyo', 'Japan', 35.6762, 139.6503);
+
+INSERT INTO Weather (CityID, Temperature, Humidity, WeatherCondition)
+VALUES (1, 22.5, 60, 'Sunny'),
+       (2, 18.2, 75, 'Cloudy'),
+       (3, 27.8, 70, 'Rainy');
+
+INSERT INTO Users (UserName, Email, PasswordHash)
+VALUES ('John Doe', 'john@example.com', 'hashed_password_123'),
+       ('Jane Smith', 'jane@example.com', 'hashed_password_456');
+       
+SELECT * FROM Cities;
+
+SELECT c.CityName, w.Temperature, w.Humidity, w.WeatherCondition, w.Date
+FROM Weather w
+JOIN Cities c ON w.CityID = c.CityID
+WHERE c.CityName = 'New York';
+
+SELECT * FROM Users;
+
+UPDATE Weather
+SET Temperature = 25.0
+WHERE WeatherID = 1;
+
+DELETE FROM Users
+WHERE UserID = 2;
